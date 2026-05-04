@@ -8,7 +8,7 @@ Fraud Detection Frontend is a modern profile analytics and investigation dashboa
 
 ### Installation
 
-To begin, install the required dependencies using the following command:
+To begin, install the required dependencies using the following command below:
 
 ```bash
 pnpm i
