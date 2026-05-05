@@ -26,6 +26,14 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function getThemeFromCookie(): string {
+  if (typeof document === "undefined") return DEFAULT_THEME;
+  const match = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${COOKIE_NAME}=`));
+  return match ? match.split("=")[1] : DEFAULT_THEME;
+}
+
 export function ActiveThemeProvider({
   children,
   initialTheme,
@@ -38,6 +46,13 @@ export function ActiveThemeProvider({
   );
 
   useEffect(() => {
+    if (!initialTheme) {
+      const stored = getThemeFromCookie();
+      if (stored !== activeTheme) {
+        setActiveTheme(stored);
+        return;
+      }
+    }
     setThemeCookie(activeTheme);
 
     Array.from(document.body.classList)
@@ -49,7 +64,7 @@ export function ActiveThemeProvider({
     if (activeTheme.endsWith("-scaled")) {
       document.body.classList.add("theme-scaled");
     }
-  }, [activeTheme]);
+  }, [activeTheme, initialTheme]);
 
   return (
     <ThemeContext.Provider value={{ activeTheme, setActiveTheme }}>
